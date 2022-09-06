@@ -75,37 +75,53 @@ class Chatbox {
         this.messages.push(msg1);
         fetch("http://localhost:8000/api/pregunta/", {
             method: "POST",
-            body: JSON.stringify({'categoria':'DCAP'}),
+            body: JSON.stringify({'text':text1}),
             headers: { "Content-type": "application/json; charset=UTF-8" },
         })
-            .then(response => response.json())
-            .then(data => {
-            
-            let msg2 = { 'name': "bot", 'message': data[0].text };
-            this.messages.push(msg2);
-            this.updateChatText(chatbox)
-            textField.value = ''
+            .then(response => {
+                if (response.status == 404){
+                    fetch("http://localhost:8000/api/categoria")
+                        .then(res => res.json())
+                        .then(data => {
+                            data.forEach(element => {
+                                let msg2 = { 'name': "bot", 'message': element.descripcion };
+                                this.messages.push(msg2);
+                            });
+                            this.updateChatText(chatbox)
+                            textField.value = ''
+                    })
+                }else {
+                    response.json()
+                    .then(data => {
+                        data.forEach(element => {
+                            let msg2 = { 'name': "bot", 'message': element.text };
+                            this.messages.push(msg2);
+                        });
+                        this.updateChatText(chatbox)
+                        textField.value = ''
+                    })
+                }
+            })
+            // .then(data => {
+            //     data.forEach(element => {
+            //         let msg2 = { 'name': "bot", 'message': element.text };
+            //         this.messages.push(msg2);
+            //     });
+            //     this.updateChatText(chatbox)
+            //     textField.value = ''
 
-        }).catch((error) => {
-            console.error('Error:', error);
-            this.updateChatText(chatbox)
-            textField.value = ''
-        });
+            // })
+            .catch((error) => {
+                console.error('Error:', error);
+                this.updateChatText(chatbox)
+                textField.value = ''
+            });
     }
 
-    
+
 
     updateChatText(chatbox) {
         let html = '';
-        console.log('updatetext')
-        console.log(this.messages.length);
-        console.log(this.messages[0]);
-        
-        if (this.messages.length === 0) {
-            console.log('asd')
-        }
-
-        console.log(this.messages);
 
         this.messages.slice().reverse().forEach(function(item, index) {
             console.log('item',item);
