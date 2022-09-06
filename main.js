@@ -10,26 +10,33 @@ class Chatbox {
         this.messages = [];
     }
     
-    async setBienvenida() {
-        try {
-            let response = await fetch("http://localhost:8000/api/generico/?type=MBie");
-            let data = await response.json();
-            let message_bot = {'name': 'bot', 'message': data[0].text}
-            this.messages.push(message_bot)
-    
-        } catch {
-            let message_bot = {'name': 'bot', 'message': 'Mensaje de error'}
-            this.messages.push(message_bot)  
-            console.log("Algo paso, no se pudo resolver...");
-        }
-    }
+    // async setBienvenida() {
+    //     try {
+    //         let response = await fetch("http://localhost:8000/api/generico/?type=MBie");
+    //         let data = await response.json();
+    //         let message_bot = {'name': 'bot', 'message': data[0].text}
+    //         this.messages.push(message_bot)            
+    //     } catch {
+    //         let message_bot = {'name': 'bot', 'message': 'Mensaje de error'}
+    //         this.messages.push(message_bot)  
+    //         console.log("Algo paso, no se pudo resolver...");
+    //     }
+    // }
 
+    setBienvenida() {
+        fetch("http://localhost:8000/api/generico/?type=MBie")
+            .then(response => response.json())
+            .then(data =>{
+                let message_bot = {'name': 'bot', 'message': data[0].text}
+                this.messages.push(message_bot)
+                this.display();
+            })
+            .catch((err) => console.log(err));
+    }
 
     display() {
         const {openButton, chatBox, sendButton} = this.args;
 
-        console.log('display chatbot');
-        console.log('lent messages', this.messages.length);
         this.updateChatText(chatBox);
 
         openButton.addEventListener('click', () => this.toggleState(chatBox))
@@ -57,7 +64,7 @@ class Chatbox {
     }
 
     onSendButton(chatbox) {
-        var textField = chatbox.querySelector('input');
+        let textField = chatbox.querySelector('input');
         let text1 = textField.value
         
         if (text1 === "") {
@@ -66,36 +73,34 @@ class Chatbox {
 
         let msg1 = { name: "user", message: text1 }
         this.messages.push(msg1);
-        // TODO
-        fetch('http://localhost:8000/api/messages/type/', {
-            method: 'POST',
-            body: JSON.stringify({ message: text1 }),
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-          })
-          .then(resp => resp.json())
-          .then(resp => {
-            console.log(resp['response'])
-            let msg2 = { name: "bot", message: resp['response'] };
+        fetch("http://localhost:8000/api/pregunta/", {
+            method: "POST",
+            body: JSON.stringify({'categoria':'DCAP'}),
+            headers: { "Content-type": "application/json; charset=UTF-8" },
+        })
+            .then(response => response.json())
+            .then(data => {
+            
+            let msg2 = { 'name': "bot", 'message': data[0].text };
             this.messages.push(msg2);
             this.updateChatText(chatbox)
             textField.value = ''
-            // console.log(this.messages);
 
         }).catch((error) => {
             console.error('Error:', error);
             this.updateChatText(chatbox)
             textField.value = ''
-          });
+        });
     }
+
+    
 
     updateChatText(chatbox) {
         let html = '';
         console.log('updatetext')
         console.log(this.messages.length);
         console.log(this.messages[0]);
+        
         if (this.messages.length === 0) {
             console.log('asd')
         }
@@ -118,7 +123,4 @@ class Chatbox {
 }
 
 const chatbox = new Chatbox();
-console.log('set Bienvida');
 chatbox.setBienvenida();
-console.log('dspasldas');
-chatbox.display();
