@@ -137,6 +137,7 @@ body {
 /* Messages */
 .chatbox__messages {
     padding: 0 20px;
+    font-size: 12px;
 }
 
 .messages__item {

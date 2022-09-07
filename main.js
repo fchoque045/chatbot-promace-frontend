@@ -64,7 +64,7 @@ class Chatbox {
         try {
             data = await fecthPregunta(text1);
             console.log('sendButton',data)
-            this.display_message(data);
+            this.saveMessageUser(data);
             textField.value = ''
             this.updateChatText(chatbox)
         } catch (error){
@@ -72,7 +72,6 @@ class Chatbox {
             console.log("Algo paso, no se pudo resolver...");
         }
     }
-            
 
     updateChatText(chatbox) {
         let html = '';
@@ -91,18 +90,35 @@ class Chatbox {
         chatmessage.innerHTML = html;
     }
 
-    display_message(data){
-        console.log('displat messge',data)
+    saveMessageUser(data){
+        let message_final = 'Estas son las siguientes opciones \n';
         data.forEach(element => {
-            let message = element.text
+            let message = element.text;
+            console.log(message);
             if (message === undefined){
-                console.log(message)
                 message = element.descripcion;
+                console.log(message);
             }
-            let msg2 = { 'name': "bot", 'message': message };
+            
+            message_final += message + '\n';
+        });
+        let msg2 = { 'name': "bot", 'message': message_final };
+        this.messages.push(msg2);       
+    }
 
-            this.messages.push(msg2);
-        });        
+    displayMessage(){
+        console.log('displat messge',data)
+        let message_final = ''
+        data.forEach(element => {
+            let message = element.text + ' \n ';
+            console.log(message)
+            if (message === undefined){
+                message = element.descripcion + ' \n ';
+            }
+            message_final += message;
+        });
+        let msg2 = { 'name': "bot", 'message': message_final };
+        this.messages.push(msg2);       
     }
 
 }

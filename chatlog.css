@@ -663,3 +663,10 @@ span.chat-user {
     margin-bottom: 2px;
     border-radius: 6px;
 }
+
+#botplatformboxbar, #botplatformchatboxbar{
+    background-color: gray;
+    background-image: url("https://raw.githubusercontent.com/fchoque045/chatbot-promace-frontend/main/assets/chatbox-icon.svg");
+    background-repeat: no-repeat;
+    border-radius: 100%;
+}
