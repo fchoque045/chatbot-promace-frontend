@@ -7,7 +7,7 @@
  * Style sheet responsible for Botlibre Embed Tab User vs. Bot conversation
  */
 
- .botplatformbox {
+.botplatformbox {
 	text-align: left;
 }
 .botplatformchatbox a, .botplatformbox a {
@@ -312,10 +312,10 @@ span.botplatformframechat-user-1, span.botplatformframechat-user-2 {
 }
 /* ########################################  EmbedBotTab  ####################################################### */
 .box:hover, .botplatformbox:hover, .botplatformchatbox:hover {
-	border: 1px;
+	/* border: 1px;
 	border-style: solid;
 	border-color: black;
-	visibility: visible;
+	visibility: visible; */
 }
 .botplatformboxclose, .botplatformchatboxclose, .botplatformboxmin, .botplatformchatboxmin, .botplatformboxmax, .botplatformchatboxmax {
 	font-size: 22px;

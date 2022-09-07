@@ -9,19 +9,6 @@ class Chatbox {
         this.state = false;
         this.messages = [];
     }
-    
-    // async setBienvenida() {
-    //     try {
-    //         let response = await fetch("http://localhost:8000/api/generico/?type=MBie");
-    //         let data = await response.json();
-    //         let message_bot = {'name': 'bot', 'message': data[0].text}
-    //         this.messages.push(message_bot)            
-    //     } catch {
-    //         let message_bot = {'name': 'bot', 'message': 'Mensaje de error'}
-    //         this.messages.push(message_bot)  
-    //         console.log("Algo paso, no se pudo resolver...");
-    //     }
-    // }
 
     setBienvenida() {
         fetch("http://localhost:8000/api/generico/?type=MBie")
@@ -63,7 +50,7 @@ class Chatbox {
         }
     }
 
-    onSendButton(chatbox) {
+    async onSendButton(chatbox) {
         let textField = chatbox.querySelector('input');
         let text1 = textField.value
         
@@ -72,53 +59,20 @@ class Chatbox {
         }
 
         let msg1 = { name: "user", message: text1 }
-        this.messages.push(msg1);
-        fetch("http://localhost:8000/api/pregunta/", {
-            method: "POST",
-            body: JSON.stringify({'text':text1}),
-            headers: { "Content-type": "application/json; charset=UTF-8" },
-        })
-            .then(response => {
-                if (response.status == 404){
-                    fetch("http://localhost:8000/api/categoria")
-                        .then(res => res.json())
-                        .then(data => {
-                            data.forEach(element => {
-                                let msg2 = { 'name': "bot", 'message': element.descripcion };
-                                this.messages.push(msg2);
-                            });
-                            this.updateChatText(chatbox)
-                            textField.value = ''
-                    })
-                }else {
-                    response.json()
-                    .then(data => {
-                        data.forEach(element => {
-                            let msg2 = { 'name': "bot", 'message': element.text };
-                            this.messages.push(msg2);
-                        });
-                        this.updateChatText(chatbox)
-                        textField.value = ''
-                    })
-                }
-            })
-            // .then(data => {
-            //     data.forEach(element => {
-            //         let msg2 = { 'name': "bot", 'message': element.text };
-            //         this.messages.push(msg2);
-            //     });
-            //     this.updateChatText(chatbox)
-            //     textField.value = ''
-
-            // })
-            .catch((error) => {
-                console.error('Error:', error);
-                this.updateChatText(chatbox)
-                textField.value = ''
-            });
+        this.messages.push(msg1); 
+        let data = {}      
+        try {
+            data = await fecthPregunta(text1);
+            console.log('sendButton',data)
+            this.display_message(data);
+            textField.value = ''
+            this.updateChatText(chatbox)
+        } catch (error){
+            console.log(error)
+            console.log("Algo paso, no se pudo resolver...");
+        }
     }
-
-
+            
 
     updateChatText(chatbox) {
         let html = '';
@@ -135,6 +89,37 @@ class Chatbox {
 
         const chatmessage = chatbox.querySelector('.chatbox__messages');
         chatmessage.innerHTML = html;
+    }
+
+    display_message(data){
+        console.log('displat messge',data)
+        data.forEach(element => {
+            let message = element.text
+            if (message === undefined){
+                console.log(message)
+                message = element.descripcion;
+            }
+            let msg2 = { 'name': "bot", 'message': message };
+
+            this.messages.push(msg2);
+        });        
+    }
+
+}
+
+async function fecthPregunta(text){
+    const response = await fetch("http://localhost:8000/api/pregunta/", {
+        method: "POST",
+        body: JSON.stringify({'text':text}),
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+    })
+    if (response.status == 404){
+        const response_cat = await fetch("http://localhost:8000/api/categoria")
+        const data = await response_cat.json();
+        return data
+    }else {
+        const data = await response.json();        
+        return data
     }
 }
 
