@@ -11,7 +11,7 @@ class Chatbox {
     }
 
     setBienvenida() {
-        fetch("http://localhost:8000/api/generico/?type=MBie")
+        fetch("https://chatbot-promace.herokuapp.com/api/generico/?type=MBie")
             .then(response => response.json())
             .then(data =>{
                 let message_bot = {'name': 'bot', 'message': data[0].text}
@@ -124,13 +124,13 @@ class Chatbox {
 }
 
 async function fecthPregunta(text){
-    const response = await fetch("http://localhost:8000/api/pregunta/", {
+    const response = await fetch("https://chatbot-promace.herokuapp.com/api/pregunta/", {
         method: "POST",
         body: JSON.stringify({'text':text}),
         headers: { "Content-type": "application/json; charset=UTF-8" },
     })
     if (response.status == 404){
-        const response_cat = await fetch("http://localhost:8000/api/categoria")
+        const response_cat = await fetch("https://chatbot-promace.herokuapp.com/api/categoria")
         const data = await response_cat.json();
         return data
     }else {
