@@ -72,21 +72,33 @@ body {
     margin-top: auto;
     display: flex;
     overflow-y: scroll;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.messages__container {
+    display: flex;
+    gap: 0 0.5rem;
+    flex-wrap: wrap;
+    /* max-width: 60.6%; */
+}
+
+.message__contaner--operator {
+    justify-content: end;
 }
 
 .messages__item {
     background: orange;
-    max-width: 60.6%;
-    width: fit-content;
+    /* width: fit-content; */
 }
 
 .messages__item--operator {
-    margin-left: auto;
+    /* margin-left: auto; */
+    
 }
 
 .messages__item--visitor {
-    margin-right: auto;
+    /* margin-right: auto; */
 }
 
 /* FOOTER */
@@ -141,10 +153,10 @@ body {
 }
 
 .messages__item {
-    margin-top: 10px;
+    /* margin-top: 10px; */
     background: #E0E0E0;
     padding: 8px 12px;
-    max-width: 70%;
+    /* max-width: 70%; */
 }
 
 .messages__item--visitor,
@@ -200,5 +212,11 @@ body {
     border-top-right-radius: 50px;
     border-bottom-left-radius: 50px;
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.message__item--choice {
+    border-radius: 20px;
+    background-color: rgb(255, 160, 125);
     cursor: pointer;
 }
