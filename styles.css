@@ -207,6 +207,7 @@ body {
     padding: 10px 10px;
     border-radius: 30px;
     text-align: left;
+	max-height: 35px;
 }
 
 .chatbox__send--footer {
