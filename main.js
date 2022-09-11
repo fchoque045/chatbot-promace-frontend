@@ -131,8 +131,8 @@ class Chatbox {
         //   });
 
         const chatmessage = chatbox.querySelector('.chatbox__messages');
-        chatmessage.appendChild(this.createMessageContent(messageChildren, messageClass)); 
-        chatmessage.scrollTop = chatmessage.scrollHeight;
+        chatmessage.appendChild(this.createMessageContent(messageChildren, messageClass));  
+        chatmessage.scrollTop = chatmessage.scrollHeight; 
         // chatmessage.innerHTML = html;
     }
 
