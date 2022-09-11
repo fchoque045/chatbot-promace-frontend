@@ -71,7 +71,7 @@ body {
 }
 
 .logo_bot{
-    height: 100%;
+    height: 85%;
 }
 
 /* MESSAGES */
@@ -117,7 +117,8 @@ body {
 }
 
 .chatbox__support {
-    background: #f9f9f9;
+    /*background: #f9f9f9; */
+	background: steelblue;
     height: 450px;
     width: 320px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -164,10 +165,10 @@ body {
 }
 
 .messages__item {
-    margin-top: 10px;
+    margin-top: 0px;
     background: #E0E0E0;
     padding: 8px 12px;
-    max-width: 70%;
+    max-width: 80%;
 }
 
 .messages__item--visitor,
@@ -191,13 +192,13 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0px 20px;
-    height: 15%;
+    padding: 0px 15px;
+    min-height: 50px;
     background: var(--secondaryGradient);
     box-shadow: var(--secondaryBoxShadow);
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .chatbox__footer input {
@@ -227,9 +228,16 @@ body {
 }
 
 .message__item--choice {
-    border-radius: 20px;
-    background-color: #FAE081;
-    margin: 10px;
-    padding: 5px;
+    border-radius: 5px;
+    background-color: transparent;
+    margin: 2px;
+    padding: 3px;
     cursor: pointer;
+	border: 1px solid #14A5A1;
+	color: #14A5A1;
 }
+
+.message__item--choice:hover {
+      background-color: #14A5A1;
+      color: white;
+ }
