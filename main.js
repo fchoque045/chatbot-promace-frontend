@@ -1,5 +1,5 @@
-// const baseUrl = 'http://localhost:8000/api'
-const baseUrl = 'https://chatbot-promace.herokuapp.com/api'
+// const baseUrl = 'http://127.0.0.1:8000/api'
+ const baseUrl = 'https://chatbot-promace.herokuapp.com/api'
 
 class Chatbox {
     constructor() {
@@ -96,7 +96,7 @@ class Chatbox {
 
     createMessageItem(clazz, content) {        
         const messageElement = document.createElement('div');
-        messageElement.textContent = content;
+        messageElement.innerHTML = content;
         messageElement.classList.add('messages__item');
         messageElement.classList.add(`messages__item--${clazz}`);
         return messageElement;

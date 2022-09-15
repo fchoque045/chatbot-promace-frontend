@@ -182,7 +182,7 @@ body {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     border-bottom-left-radius: 20px;
-    background: var(--primary);
+    background: #1F9FA2;
     color: white;
 }
 
@@ -234,11 +234,12 @@ body {
     margin: 2px;
     padding: 3px;
     cursor: pointer;
-	border: 1px solid #14A5A1;
-	color: #14A5A1;
+	border: 1px solid #1F9FA2;
+	color: #1F9FA2;
+	font-weight: bold;
 }
 
 .message__item--choice:hover {
-      background-color: #14A5A1;
+      background-color: #1F9FA2;
       color: white;
  }
