@@ -1,15 +1,3 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Nunito', sans-serif;
-    font-weight: 400;
-    font-size: 100%;
-    background: #F1F1F1;
-}
 
 *, html {
     --primaryGradient: linear-gradient(93.12deg, #133c63 0.52%, #31679B 100%);
@@ -25,7 +13,7 @@ body {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    z-index: 1;
+    z-index: 1111;
 }
 
 /* CONTENT IS CLOSE */
@@ -71,7 +59,7 @@ body {
 }
 
 .logo_bot{
-    height: 100%;
+    height: 95%;
 }
 
 /* MESSAGES */
@@ -117,7 +105,8 @@ body {
 }
 
 .chatbox__support {
-    background: #f9f9f9;
+    /*background: #f9f9f9; */
+	background: steelblue;
     height: 450px;
     width: 320px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -164,10 +153,10 @@ body {
 }
 
 .messages__item {
-    margin-top: 10px;
+    margin-top: 0px;
     background: #E0E0E0;
     padding: 8px 12px;
-    max-width: 70%;
+    max-width: 80%;
 }
 
 .messages__item--visitor,
@@ -181,7 +170,7 @@ body {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     border-bottom-left-radius: 20px;
-    background: var(--primary);
+    background: #1F9FA2;
     color: white;
 }
 
@@ -191,13 +180,13 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0px 20px;
-    height: 15%;
+    padding: 0px 15px;
+    min-height: 50px;
     background: var(--secondaryGradient);
     box-shadow: var(--secondaryBoxShadow);
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .chatbox__footer input {
@@ -206,6 +195,7 @@ body {
     padding: 10px 10px;
     border-radius: 30px;
     text-align: left;
+	max-height: 35px;
 }
 
 .chatbox__send--footer {
@@ -227,9 +217,26 @@ body {
 }
 
 .message__item--choice {
-    border-radius: 20px;
-    background-color: #FAE081;
-    margin: 10px;
-    padding: 5px;
+    border-radius: 5px;
+    background-color: transparent;
+    margin: 2px;
+    padding: 3px;
     cursor: pointer;
+	border: 1px solid #1F9FA2;
+	color: #1F9FA2;
+	font-weight: bold;
+}
+
+.message__item--choice:hover {
+      background-color: #1F9FA2;
+      color: white;
+ }
+ 
+ 
+ a.linchat{
+  color:blue;
+}
+
+ a:hover.linchat{
+  color:cadetblue;
 }
