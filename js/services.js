@@ -12,8 +12,7 @@ const fetchSaludoBienvenida = async () => {
   }
 };
 
-const fetchSaludoPresentacion = async () => {
-  let tipo = "MPre";
+const fetchGenerico = async (tipo) => {
   const url = `${baseUrl}/generico/?tipo=${tipo}`;
   const resp = await fetch(url);
   if (resp.status == 200) {
@@ -53,7 +52,7 @@ const fetchSubcategoriasByIdSubcategoria = async (id) => {
     const body = await resp.json();
     return body;
   } else {
-    return undefined;
+    return [];
   }
 };
 
@@ -64,7 +63,7 @@ const fetchQuestionByIdSubcategoria = async (id) => {
     const body = await resp.json();
     return body;
   } else {
-    return undefined;
+    return [];
   }
 };
 
@@ -79,12 +78,24 @@ const fetchQuestion = async (id) => {
   }
 };
 
+const fetchQuestionByKeyword = async (text) => {
+  const url = `${baseUrl}/preguntaKeyword/?keyword=${text}`;
+  const resp = await fetch(url);
+  if (resp.status == 200) {
+    const body = await resp.json();
+    return body;
+  } else {
+    return undefined;
+  }
+};
+
 export {
   fetchSaludoBienvenida,
-  fetchSaludoPresentacion,
+  fetchGenerico,
   fetchCategorias,
   fetchSubcategoriasByCategoria,
   fetchSubcategoriasByIdSubcategoria,
   fetchQuestionByIdSubcategoria,
   fetchQuestion,
+  fetchQuestionByKeyword,
 };
