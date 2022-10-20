@@ -1,4 +1,5 @@
 const baseUrl = "http://127.0.0.1:8000/api";
+// const baseUrl = 'https://chatbot-promace.herokuapp.com/api'
 
 const fetchSaludoBienvenida = async () => {
   let hora = new Date();
@@ -7,9 +8,8 @@ const fetchSaludoBienvenida = async () => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body[0];
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 const fetchGenerico = async (tipo) => {
@@ -18,9 +18,8 @@ const fetchGenerico = async (tipo) => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body[0];
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 const fetchCategorias = async () => {
@@ -29,9 +28,8 @@ const fetchCategorias = async () => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body;
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 const fetchSubcategoriasByCategoria = async (id) => {
@@ -40,9 +38,11 @@ const fetchSubcategoriasByCategoria = async (id) => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body;
-  } else {
-    return undefined;
   }
+  if (resp.status == 400) {
+    return [];
+  }
+  return undefined;
 };
 
 const fetchSubcategoriasByIdSubcategoria = async (id) => {
@@ -51,9 +51,11 @@ const fetchSubcategoriasByIdSubcategoria = async (id) => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body;
-  } else {
+  }
+  if (resp.status == 400) {
     return [];
   }
+  return undefined;
 };
 
 const fetchQuestionByIdSubcategoria = async (id) => {
@@ -62,9 +64,8 @@ const fetchQuestionByIdSubcategoria = async (id) => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body;
-  } else {
-    return [];
   }
+  return [];
 };
 
 const fetchQuestion = async (id) => {
@@ -73,9 +74,8 @@ const fetchQuestion = async (id) => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body;
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 const fetchQuestionByKeyword = async (text) => {
@@ -84,9 +84,11 @@ const fetchQuestionByKeyword = async (text) => {
   if (resp.status == 200) {
     const body = await resp.json();
     return body;
-  } else {
-    return undefined;
   }
+  if (resp.status == 404) {
+    return [];
+  }
+  return undefined;
 };
 
 export {

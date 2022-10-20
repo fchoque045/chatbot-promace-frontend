@@ -241,7 +241,9 @@ a:hover.linchat {
   color: cadetblue;
 }
 
+/* WAIT ELEMENT */
 .dot-pulse {
+  background-color: #1f9fa2;
   --uib-size: 40px;
   --uib-speed: 1.3s;
   --uib-color: black;

@@ -9,9 +9,6 @@ import {
   fetchQuestionByKeyword,
 } from "./services.js";
 
-// const baseUrl = "http://127.0.0.1:8000/api";
-// const baseUrl = 'https://chatbot-promace.herokuapp.com/api'
-
 class Chatbox {
   constructor() {
     this.args = {
@@ -25,8 +22,8 @@ class Chatbox {
   }
 
   async setSaludoBienvenida() {
-    const msj = await fetchSaludoBienvenida();
     try {
+      const msj = await fetchSaludoBienvenida();
       const message_bot = { name: "bot", message: msj.mensaje };
       this.updateChatText(this.args.chatBox, message_bot);
     } catch (error) {
@@ -37,16 +34,10 @@ class Chatbox {
   }
 
   async setSaludoPresentacion(name) {
-    const msj = await fetchGenerico("MPre");
-    const categories = await fetchCategorias();
-    categories.forEach((c) => (c.type = "category"));
     try {
-      const message_bot = {
-        name: "bot",
-        message: msj.texto.replace("{name}", name),
-        choices: categories,
-      };
-      this.updateChatText(this.args.chatBox, message_bot);
+      const msj = await fetchGenerico("MPre");
+      const data = await fetchCategorias();
+      this.displayCategory(data, msj.texto.replace("{name}", name));
       this.hello = false;
     } catch (error) {
       console.log("Error de servidor");
@@ -79,7 +70,6 @@ class Chatbox {
 
   toggleState(chatbox) {
     this.state = !this.state;
-    console.log("open", this.state);
 
     // show or hides the box
     if (this.state) {
@@ -89,6 +79,51 @@ class Chatbox {
       chatbox.classList.remove("chatbox--active");
       chatbox.classList.add("oculto");
     }
+  }
+
+  displayCategory(data, message) {
+    data.forEach((c) => (c.type = "category"));
+    const message_bot = { name: "bot", choices: data, message };
+    this.updateChatText(this.args.chatBox, message_bot);
+  }
+
+  displaySubcategory(data, message) {
+    data.forEach((s) => (s.type = "subcategory"));
+    const message_bot = {
+      name: "bot",
+      choices: data,
+      message: `Dudas respecto a ${message}`,
+    };
+
+    this.updateChatText(this.args.chatBox, message_bot);
+  }
+
+  displaySubcategoryQuestion(data1, data2) {
+    data1.forEach((s) => (s.type = "subcategory"));
+    data2.forEach((p) => (p.type = "question"));
+    const data = data1.concat(data2);
+    const message_bot = {
+      name: "bot",
+      choices: data,
+      message: `Selecciona una de las opciones`,
+    };
+    this.updateChatText(this.args.chatBox, message_bot);
+  }
+
+  displayQuestion(data) {
+    const message_bot = {
+      name: "bot",
+      message: data.respuesta,
+      type: "question",
+    };
+    this.updateChatText(this.args.chatBox, message_bot);
+  }
+
+  displayQuestionKeyword(data) {
+    data.forEach((p) => (p.type = "question"));
+    const message_bot = this.getMessageUser({ choices: data });
+    message_bot.message = `Preguntas referidas a la consulta`;
+    this.updateChatText(this.args.chatBox, message_bot);
   }
 
   async onSendButton(message) {
@@ -106,10 +141,13 @@ class Chatbox {
 
     try {
       const data = await fetchQuestionByKeyword(message);
-      data.forEach((p) => (p.type = "question"));
-      const message_bot = this.getMessageUser({ choices: data });
-      message_bot.message = `Preguntas referidas a la consulta`;
-      this.updateChatText(this.args.chatBox, message_bot);
+      if (data.length == 0) {
+        const msj = await fetchGenerico("MDef");
+        const categories = await fetchCategorias(msj.texto);
+        this.displayCategory(categories, msj.texto);
+      } else {
+        this.displayQuestionKeyword(data);
+      }
     } catch (error) {
       console.log(error);
       console.log("Algo paso, no se pudo resolver...");
@@ -125,11 +163,7 @@ class Chatbox {
     if (type == "category") {
       try {
         const data = await fetchSubcategoriasByCategoria(id);
-        data.forEach((s) => (s.type = "subcategory"));
-        const message_bot = this.getMessageUser({ choices: data });
-        message_bot.message = `Dudas respecto a ${message}`;
-        console.log(message);
-        this.updateChatText(this.args.chatBox, message_bot);
+        this.displaySubcategory(data, message);
       } catch (error) {
         console.log(error);
         console.log("Algo paso, no se pudo resolver...");
@@ -139,13 +173,8 @@ class Chatbox {
     if (type == "subcategory") {
       try {
         const data1 = await fetchSubcategoriasByIdSubcategoria(id);
-        data1.forEach((s) => (s.type = "subcategory"));
         const data2 = await fetchQuestionByIdSubcategoria(id);
-        data2.forEach((p) => (p.type = "question"));
-        const data = data1.concat(data2);
-        const message_bot = this.getMessageUser({ choices: data });
-        message_bot.message = `Selecciona una de las opciones`;
-        this.updateChatText(this.args.chatBox, message_bot);
+        this.displaySubcategoryQuestion(data1, data2);
       } catch (error) {
         console.log(error);
         console.log("Algo paso, no se pudo resolver...");
@@ -155,9 +184,7 @@ class Chatbox {
     if (type == "question") {
       try {
         const data = await fetchQuestion(id);
-        data.type = "question";
-        const message_bot = this.getMessageUser(data);
-        this.updateChatText(this.args.chatBox, message_bot);
+        this.displayQuestion(data);
       } catch (error) {
         console.log(error);
         console.log("Algo paso, no se pudo resolver...");
@@ -211,16 +238,13 @@ class Chatbox {
     chatmessage.scrollTop = chatmessage.scrollHeight;
   }
 
-  getMessageUser(data) {
-    if (data.choices) {
-      const message = {
-        name: "bot",
-        choices: data.choices,
-      };
-      return message;
-    }
-
-    return { name: "bot", message: data.respuesta, type: data.type };
+  createWaitItem() {
+    const waitElement = document.createElement("div");
+    waitElement.classList.add("dot-pulse");
+    const waitChildElement = document.createElement("div");
+    waitChildElement.classList.add("dot-pulse__dot");
+    waitElement.appendChild(waitChildElement);
+    return waitElement;
   }
 }
 
