@@ -1,5 +1,6 @@
 import {
   fetchSaludoBienvenida,
+  fetchDespedida,
   fetchGenerico,
   fetchCategorias,
   fetchSubcategoriasByCategoria,
@@ -27,7 +28,6 @@ class Chatbox {
       const message_bot = { name: "bot", message: msj.mensaje };
       this.updateChatText(this.args.chatBox, message_bot);
     } catch (error) {
-      console.log("Error de servidor");
       const message_bot = { name: "bot", message: "Error" };
       this.updateChatText(this.args.chatBox, message_bot);
     }
@@ -40,7 +40,6 @@ class Chatbox {
       this.displayCategory(data, msj.texto.replace("{name}", name));
       this.hello = false;
     } catch (error) {
-      console.log("Error de servidor");
       const message_bot = { name: "bot", message: "Error" };
       this.updateChatText(this.args.chatBox, message_bot);
     }
@@ -63,7 +62,6 @@ class Chatbox {
   sendMessage(chatbox) {
     let textField = chatbox.querySelector("input");
     let text1 = textField.value;
-    console.log(text1);
     this.onSendButton(text1);
     textField.value = "";
   }
@@ -141,16 +139,22 @@ class Chatbox {
 
     try {
       const data = await fetchQuestionByKeyword(message);
-      if (data.length == 0) {
-        const msj = await fetchGenerico("MDef");
-        const categories = await fetchCategorias(msj.texto);
-        this.displayCategory(categories, msj.texto);
-      } else {
+      if (data.length != 0) {
         this.displayQuestionKeyword(data);
       }
+      if (data.length == 0) {
+        const bye = await fetchDespedida(message);
+        if (bye.length != 0) {
+          const message_bot = { name: "bot", message: bye.mensaje };
+          this.updateChatText(this.args.chatBox, message_bot);
+        } else {
+          const msj = await fetchGenerico("MDef");
+          const categories = await fetchCategorias(msj.texto);
+          this.displayCategory(categories, msj.texto);
+        }
+      }
     } catch (error) {
-      console.log(error);
-      console.log("Algo paso, no se pudo resolver...");
+      return;
     }
   }
 
@@ -158,8 +162,6 @@ class Chatbox {
     const { chatBox } = this.args;
     let msg1 = { name: "user", message };
     this.updateChatText(chatBox, msg1);
-
-    console.log(message, type);
     if (type == "category") {
       try {
         const data = await fetchSubcategoriasByCategoria(id);
@@ -176,8 +178,7 @@ class Chatbox {
         const data2 = await fetchQuestionByIdSubcategoria(id);
         this.displaySubcategoryQuestion(data1, data2);
       } catch (error) {
-        console.log(error);
-        console.log("Algo paso, no se pudo resolver...");
+        return;
       }
     }
 
@@ -213,7 +214,6 @@ class Chatbox {
   updateChatText(chatbox, item) {
     let messageChildren;
     const messageClass = item.name === "bot" ? "visitor" : "operator";
-    console.log(item);
     if (item.choices) {
       messageChildren = this.createMessageItem(messageClass, item.message);
       item.choices.map((c) => {

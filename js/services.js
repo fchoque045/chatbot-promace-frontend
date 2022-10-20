@@ -2,12 +2,24 @@ const baseUrl = "http://127.0.0.1:8000/api";
 // const baseUrl = 'https://chatbot-promace.herokuapp.com/api'
 
 const fetchSaludoBienvenida = async () => {
-  let hora = new Date();
-  const url = `${baseUrl}/saludo/?hora=${hora.getHours()}:${hora.getMinutes()}`;
+  const url = `${baseUrl}/saludo/`;
   const resp = await fetch(url);
   if (resp.status == 200) {
     const body = await resp.json();
     return body[0];
+  }
+  return undefined;
+};
+
+const fetchDespedida = async (text) => {
+  const url = `${baseUrl}/despedida/?text=${text}`;
+  const resp = await fetch(url);
+  if (resp.status == 200) {
+    const body = await resp.json();
+    return body[0];
+  }
+  if (resp.status == 404) {
+    return [];
   }
   return undefined;
 };
@@ -39,7 +51,7 @@ const fetchSubcategoriasByCategoria = async (id) => {
     const body = await resp.json();
     return body;
   }
-  if (resp.status == 400) {
+  if (resp.status == 404) {
     return [];
   }
   return undefined;
@@ -52,7 +64,7 @@ const fetchSubcategoriasByIdSubcategoria = async (id) => {
     const body = await resp.json();
     return body;
   }
-  if (resp.status == 400) {
+  if (resp.status == 404) {
     return [];
   }
   return undefined;
@@ -93,6 +105,7 @@ const fetchQuestionByKeyword = async (text) => {
 
 export {
   fetchSaludoBienvenida,
+  fetchDespedida,
   fetchGenerico,
   fetchCategorias,
   fetchSubcategoriasByCategoria,
