@@ -26,6 +26,7 @@ class Chatbox {
     try {
       const msj = await fetchSaludoBienvenida();
       const message_bot = { name: "bot", message: msj.mensaje };
+      // await this.displayWait();
       this.updateChatText(this.args.chatBox, message_bot);
     } catch (error) {
       const message_bot = { name: "bot", message: "Error" };
@@ -37,6 +38,7 @@ class Chatbox {
     try {
       const msj = await fetchGenerico("MPre");
       const data = await fetchCategorias();
+      await this.displayWait();
       this.displayCategory(data, msj.texto.replace("{name}", name));
       this.hello = false;
     } catch (error) {
@@ -92,7 +94,7 @@ class Chatbox {
       choices: data,
       message: `Dudas respecto a ${message}`,
     };
-
+    console.log(message_bot);
     this.updateChatText(this.args.chatBox, message_bot);
   }
 
@@ -124,6 +126,19 @@ class Chatbox {
     this.updateChatText(this.args.chatBox, message_bot);
   }
 
+  displayWait() {
+    const chatmessage = this.args.chatBox.querySelector(".chatbox__messages");
+    chatmessage.appendChild(this.createWaitItem());
+    chatmessage.scrollTop = chatmessage.scrollHeight;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const node = document.getElementById("wait__element");
+        chatmessage.removeChild(node);
+        resolve("resolved");
+      }, 2000);
+    });
+  }
+
   async onSendButton(message) {
     if (!message) {
       return;
@@ -140,16 +155,19 @@ class Chatbox {
     try {
       const data = await fetchQuestionByKeyword(message);
       if (data.length != 0) {
+        await this.displayWait();
         this.displayQuestionKeyword(data);
       }
       if (data.length == 0) {
         const bye = await fetchDespedida(message);
         if (bye.length != 0) {
           const message_bot = { name: "bot", message: bye.mensaje };
+          await this.displayWait();
           this.updateChatText(this.args.chatBox, message_bot);
         } else {
           const msj = await fetchGenerico("MDef");
           const categories = await fetchCategorias(msj.texto);
+          await this.displayWait();
           this.displayCategory(categories, msj.texto);
         }
       }
@@ -165,6 +183,7 @@ class Chatbox {
     if (type == "category") {
       try {
         const data = await fetchSubcategoriasByCategoria(id);
+        await this.displayWait();
         this.displaySubcategory(data, message);
       } catch (error) {
         console.log(error);
@@ -176,6 +195,7 @@ class Chatbox {
       try {
         const data1 = await fetchSubcategoriasByIdSubcategoria(id);
         const data2 = await fetchQuestionByIdSubcategoria(id);
+        await this.displayWait();
         this.displaySubcategoryQuestion(data1, data2);
       } catch (error) {
         return;
@@ -185,6 +205,7 @@ class Chatbox {
     if (type == "question") {
       try {
         const data = await fetchQuestion(id);
+        await this.displayWait();
         this.displayQuestion(data);
       } catch (error) {
         console.log(error);
@@ -239,12 +260,18 @@ class Chatbox {
   }
 
   createWaitItem() {
+    const messageElement = document.createElement("div");
+    messageElement.setAttribute("id", "wait__element");
+    messageElement.classList.add("messages__item");
+    messageElement.classList.add(`messages__item--visitor`);
     const waitElement = document.createElement("div");
     waitElement.classList.add("dot-pulse");
+    waitElement.classList.add("messages__container");
     const waitChildElement = document.createElement("div");
     waitChildElement.classList.add("dot-pulse__dot");
+    messageElement.appendChild(waitElement);
     waitElement.appendChild(waitChildElement);
-    return waitElement;
+    return messageElement;
   }
 }
 
