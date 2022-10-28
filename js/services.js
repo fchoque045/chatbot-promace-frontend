@@ -1,5 +1,4 @@
-const baseUrl = "http://127.0.0.1:8000/api";
-// const baseUrl = 'https://chatbot-promace.herokuapp.com/api'
+const baseUrl = "https://chatbot.promace2.jujuy.edu.ar/api";
 
 const fetchSaludoBienvenida = async () => {
   const url = `${baseUrl}/saludo/`;
@@ -80,6 +79,16 @@ const fetchQuestionByIdSubcategoria = async (id) => {
   return [];
 };
 
+const fetchQuestionByIdCategoria = async (id) => {
+  const url = `${baseUrl}/categoria/${id}/pregunta`;
+  const resp = await fetch(url);
+  if (resp.status == 200) {
+    const body = await resp.json();
+    return body;
+  }
+  return [];
+};
+
 const fetchQuestion = async (id) => {
   const url = `${baseUrl}/pregunta/${id}/`;
   const resp = await fetch(url);
@@ -111,6 +120,7 @@ export {
   fetchSubcategoriasByCategoria,
   fetchSubcategoriasByIdSubcategoria,
   fetchQuestionByIdSubcategoria,
+  fetchQuestionByIdCategoria,
   fetchQuestion,
   fetchQuestionByKeyword,
 };
